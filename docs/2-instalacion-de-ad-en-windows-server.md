@@ -5,7 +5,13 @@ Antes de realizar la instalación del AD, he configurado la red del Windows Serv
 - **Puerta de enlace:** 10.0.1.1
 - **Servidor DNS preferido:** 10.0.1.10 (Para asegurar la resolución de nombres local)
 
+<p>
+  <img src="/img/propiedades-red-nat.png" alt="Propiedades del Adaptador Red NAT" width="40%">
+</p>
 
+<p>
+  <img src="/img/ipconfig-windows.png" alt="Configuración IP de Windows" width="60%">
+</p>
 
 El siguiente paso tras configurar la red, ha sido cambiar el nombre del servidor.  
 Desde el **Administrador del servidor > Servidor local > Propiedades > Nombre de equipo**
