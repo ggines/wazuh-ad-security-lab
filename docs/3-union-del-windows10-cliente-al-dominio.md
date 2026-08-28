@@ -24,7 +24,9 @@ Al unir el dominio, hay que poner la contraseña del administrador del dominio:
 ![Contraseña del administrador](/img/contraseña-admin.png)
 
 Una vez unido, el equipo se reiniciará y ya podremos iniciar sesión con los usuarios creados anteriormente en el controlador de dominio, como por ejemplo **soporte.it**:  
-![Inicio de sesión con el usuario soporte.it](/img/login-soporteit.png)
+<p>
+  <img src="/img/login-soporteit.png" alt="Inicio de sesión con el usuario soporte.it" width="40%">
+</p>
 
 ![whoami](/img/soporteit-whoami.png)
 
