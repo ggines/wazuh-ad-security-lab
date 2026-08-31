@@ -92,7 +92,33 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
     ![Evento](/img/evento-as-rep-roasting.png)
 
   - **Detalles del evento:**
-    ![Detalles](/img/detalles-as-rep-roasting.png)
+    <p>
+      <img src="/img/detalles-as-rep-roasting.png" alt="Detalles" width="60%"> 
+    </p>
 
     > Entre los detalles se encuentra el usuario objetivo, la IP de origen, el ID del evento (4768) y el mensaje de que se solicitó un vale de autenticación Kerberos TGT.
+    
+- **Simulación de ejecución de malware:** He creado un archivo de texto en el Escritorio del cliente con una cadena de carácteres que simula un virus.
+  Al guardar el archivo, inmediatamente Windows Defender lo detecta como una amenaza y lo elimina.
+  ![Malware simulado](/img/malware.png)
 
+  - **Evento en Wazuh:** El canal de Windows Defender ha detectado el posible malware.
+    ![Evento](/img/evento-malware.png)
+
+  - **Detalles del evento:** Aparece la cuenta en que sucedió y la ruta y el proceso de la amenaza:
+    <p>
+      <img src="/img/detalles-malware.png" alt="Detalles" width="60%"> 
+    </p>
+
+- **Ejecución de comandos sospechosos:** He ejecutado un comando en el cliente con la herramienta **procdump** para simular un ataque de robo de credenciales en
+  memoria. Este ataque consiste en leer la memoria del proceso lsass.exe para extraer contraseñas o hashes de usuarios. Este comando se utiliza para realizar
+  un volcado completo del proceso lsass.exe y guardarlo en el archivo lsass.dmp
+  ![Comando](/img/procdump.png)
+
+  - **Evento en Wazuh:** Al tratarse de un comando que interactúa con el proceso lsass.exe, Windows Defender lo detecta.
+    ![Evento](/img/evento-procdump.png)
+
+  - **Detalles del evento:**
+    <p>
+      <img src="/img/detalles-procdump.png" alt="Detalles" width="60%"> 
+    </p>
