@@ -37,4 +37,4 @@ WAZUH_MANAGER='10.0.1.11' WAZUH_AGENT_NAME='WIN-CLIENT'``
 De esta manera, aparecerán los 2 agentes en el Wazuh Dashboard:
 ![Agentes en el Wazuh Dashboard](/img/wazuh-agents-dashboard.png)
 
-![Siguiente: Configuración de los agentes para leer Sysmon y detectar Suricata](configuracion-de-los-agentes-para-leer-sysmon-y-detectar-suricata.md)
+![Siguiente: Configuración de los agentes para leer Sysmon y Suricata](configuracion-de-los-agentes-para-leer-sysmon-y-detectar-suricata.md)
