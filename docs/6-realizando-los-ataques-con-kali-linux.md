@@ -122,3 +122,39 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
     <p>
       <img src="/img/detalles-procdump.png" alt="Detalles" width="60%"> 
     </p>
+
+- **Ataque Man-In-The-Middle para la captura de credenciales de usuarios:** Este ataque consiste en montar servidores falsos (HTTP, HTTPS, DNS, SMB, etc…) en el Kali
+  para quedarse en escucha y esperar a que alguna víctima cometa un error de resolución de nombres. En este caso, desde el cliente he intentado acceder a una ruta de
+  red que no existe ("servidorfalso") para que envíe un Broadcast a toda la red local preguntando por ese nombre. En este punto, el Kali se hace pasar por ese servidor
+  y responde al cliente solicitando que se autentique para así obtener las credenciales del usuario en hash NTLMv2.
+
+  Para esto, he usado el comando ``sudo responder -I eth0 -dwv``
+  
+  ![Comando](/img/responder.png)
+
+  Inicia los servidores falsos:
+  <p>
+    <img src="/img/servidores-falsos.png" alt="Inicio de servidores falsos con responder" width="40%"> 
+  </p>
+
+  Y se queda en escucha:  
+  ![responder en escucha](/img/responder-listening.png)
+
+  En este punto, he intentado acceder a una ruta de red que no existe ("servidorfalso") desde el explorador de archivos o desde la ventana de ejecución (Windows + R):  
+  ![Ruta de red inexistente en la ventana de ejecución](/img/servidorfalso.png)
+
+  Al intentar acceder, el Kali responde al broadcast pidiendo que el usuario se autentique para acceder a ese servidor falso:
+  <p>
+    <img src="/img/poisoned-answers.png" alt="Respuestas maliciosas enviadas a la víctima" width="80%"> 
+  </p>
+  <p>
+    <img src="/img/credenciales-de-red.png" alt="Credenciales de red" width="40%"> 
+  </p>
+
+  Al enviar las credenciales de red en el cliente, el Kali recibe el hash NTLMv2 del usuario indicado (soporte.it):
+  <p>
+    <img src="/img/ntlm-hash.png" alt="Hash NTLMv2-SSP" width="80%"> 
+  </p>
+
+
+![Siguiente: Defensa y mitigación](7-defensa-y-mitigacion.md)
