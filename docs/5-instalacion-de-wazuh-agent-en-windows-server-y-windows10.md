@@ -5,7 +5,9 @@ Ubuntu Server.
 La implementación de los agentes se puede hacer de diferentes maneras, pero esta vez la haré mediante la **interfaz del Wazuh Dashboard**, siguiendo estos pasos:
 
 Desde el Wazuh Dashboard (accediendo indicando la IP del adaptador Host-Only del Ubuntu Server) he seleccionado **Deploy new agent:**  
-![Agents summary](/img/agents-summary.png)
+<p>
+  <img src="/img/agents-summary.png" alt="Agents summary" width="50%">
+</p>
 
 Para la implementación del agente Windows Server, he indicado los siguientes valores:
 - **Sistema operativo:** Windows
