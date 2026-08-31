@@ -2,6 +2,7 @@
 Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia el Windows Server y el Windows 10 cliente e identificarlos en el Wazuh Dashboard.
 
 - **Reconocimiento:** Escaneo de puertos e identificación de servicios con nmap (``nmap -sV -O IP``) hacia Windows Server
+  
   ![nmap](/img/reconocimiento.png)
 
   Este comando nos permite descubrir los puertos abiertos de la máquina objetivo, incluyendo los servicios que les corresponde y su versión. En este caso ha
@@ -17,14 +18,16 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
 
 - **Ataque de inundación ICMP (Ping Flood / DoS):** Consiste en saturar el servidor enviando miles de paquetes con un tamaño inusualmente grande
   (``sudo ping -f -s 1400 IP``)
+  
   ![Comando](/img/ping-flood.png)
 
   - **Eventos en Wazuh:** Suricata detectó los pings ICMP (Firma GPL ICMP PING *NIX)
     ![Eventos](/img/eventos-ping-flood.png)
 
 - **Ataque de Password Spraying:** Consiste en intentar acceder o validar la contraseña correcta de una cuenta de usuario probando contraseñas. En este caso,
-  he hecho un intento de acceso remoto hacia el usuario **soporte.it** del servidor. He probado una vez indicando una contraseña incorrecta y luego indicando la correcta,
-  con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario``
+  he hecho un intento de acceso remoto hacia el usuario **soporte.it** del servidor. He probado una vez indicando una contraseña incorrecta y luego indicando la
+  correcta, con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario``
+  
   ![Comando](/img/password-spraying.png)
 
   - **Eventos en Wazuh:** El canal de seguridad ha detectado estos intentos de conexiones remotas, y los identifica como un posible ataque de pass-the-hash
@@ -42,6 +45,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
 
 - **Enumeración de usuarios mediante Kerberos:** Consiste en identificar los usuarios existentes en el AD probando una lista.
   En este caso he usado la herramienta [Kerbrute](https://github.com/ropnop/kerbrute) (``kerbrute userenum --dc IP -d dominio users.txt``)
+  
   ![Comando](/img/kerbrute.png)
 
   El archivo ``users.txt`` contiene una lista de usuarios erróneos y válidos, y de esa lista ha detectado como válidos los usuarios **david.rrhh** y **maria.rrhh**
@@ -50,6 +54,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
   ejecuta SQL Server o IIS) con el fin de extraer el hash de la contraseña de esa cuenta de servicio y descifrarlo. En este caso, he utilizado Impacket
   con el script ``-GetUserSPNs`` para escanear todo el AD en busca de las cuentas con SPN y pedirles un ticket Kerberos. En el comando he indicado una cuenta de un
   usuario normal del AD para solicitar un ticket de servicio. (``impacket-GetUserSPNs server.local/maria.rrhh:Password1234 -dc-ip 10.0.1.10 -request``)
+  
   ![Comando](/img/kerberoasting.png)
 
   El comando devuelve el **ticket de servicio** (cifrado con el hash de la contraseña de la cuenta de servicio), y un atacante lo usaría para obtener la contraseña de
@@ -57,6 +62,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
 
   Para simular este ataque de fuerza bruta, he guardado el ticket en un archivo .txt y lo he descifrado usando un archivo con contraseñas, mediante el comando
   ``john --wordlist=passwds.txt ticket.txt``
+  
   ![Comando](/img/john-ticket.png)
 
   > Como es una contraseña fácil, lo ha descifrado en segundos. En este caso la contraseña de la cuenta de servicio **sql.finanzas** es **Pass1234**
@@ -79,6 +85,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
   > La vulnerabilidad está en no pedir la autenticación Kerberos previa.
   
   Después de aplicar los cambios, he lanzado el comando ``impacket-GetNPUsers server.local/maria.rrhh:Password1234 -dc-ip 10.0.1.10 -request -format hashcat``
+  
   ![Comando](/img/comando-as-rep-roasting.png)
 
   En este comando he indicado las credenciales de una cuenta supuestamente comprometida (por ejemplo, maria.rrhh) para autenticarme, y después, el script
@@ -100,6 +107,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
     
 - **Simulación de ejecución de malware:** He creado un archivo de texto en el Escritorio del cliente con una cadena de carácteres que simula un virus.
   Al guardar el archivo, inmediatamente Windows Defender lo detecta como una amenaza y lo elimina.
+  
   ![Malware simulado](/img/malware.png)
 
   - **Evento en Wazuh:** El canal de Windows Defender ha detectado el posible malware.
@@ -113,6 +121,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
 - **Ejecución de comandos sospechosos:** He ejecutado un comando en el cliente con la herramienta **procdump** para simular un ataque de robo de credenciales en
   memoria. Este ataque consiste en leer la memoria del proceso lsass.exe para extraer contraseñas o hashes de usuarios. Este comando se utiliza para realizar
   un volcado completo del proceso lsass.exe y guardarlo en el archivo lsass.dmp
+  
   ![Comando](/img/procdump.png)
 
   - **Evento en Wazuh:** Al tratarse de un comando que interactúa con el proceso lsass.exe, Windows Defender lo detecta.
@@ -137,7 +146,8 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
     <img src="/img/servidores-falsos.png" alt="Inicio de servidores falsos con responder" width="40%"> 
   </p>
 
-  Y se queda en escucha:  
+  Y se queda en escucha:
+  
   ![responder en escucha](/img/responder-listening.png)
 
   En este punto, he intentado acceder a una ruta de red que no existe ("servidorfalso") desde el explorador de archivos o desde la ventana de ejecución (Windows + R):  
