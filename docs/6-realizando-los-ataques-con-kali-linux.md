@@ -25,7 +25,7 @@ Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia e
 - **Ataque de Password Spraying:** Consiste en intentar acceder o validar la contraseña correcta de una cuenta de usuario probando contraseñas. En este caso,
   he hecho un intento de acceso remoto hacia el usuario **soporte.it** del servidor. He probado una vez indicando una contraseña incorrecta y luego indicando la correcta,
   con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario``
-  ![Comando](/img/comando-spraying.png)
+  ![Comando](/img/password-spraying.png)
 
   - **Eventos en Wazuh:** El canal de seguridad ha detectado estos intentos de conexiones remotas, y los identifica como un posible ataque de pass-the-hash
     ![Eventos](/img/eventos-password-spraying.png)
