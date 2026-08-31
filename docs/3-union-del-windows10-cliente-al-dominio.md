@@ -5,7 +5,9 @@ He configurado la red del Windows 10 cliente de esta manera:
 - **Puerta de enlace:** 10.0.1.1
 - **Servidor DNS preferido:** 10.0.1.10 (La IP del Windows Server para que pueda resolver el dominio local)
 
-![Configuración de la red](/img/configuracion-red.png)
+<p>
+  <img src="/img/configuracion-red.png" alt="Configuración de la red" width="40%">
+</p>
 
 Después de aplicar los cambios, he hecho un ping al servidor para comprobar que el cliente lo detecta:
 ![Ping servidor](/img/ping-servidor.png)
@@ -17,11 +19,15 @@ Ahora ya hay conectividad:
 ![Ping 10.0.1.20](/img/conectividad.png)
 
 Para unir el cliente al dominio, he ido a **Panel de control > Sistema y seguridad > Sistema > Configuración avanzada del sistema > Nombre de equipo**  
-He cambiado el nombre del equipo a WIN10-CLIENT y he indicado el dominio **server.local**
-![Cambio de nombre de equipo](/img/nombre-de-equipo-cliente.png)
+He cambiado el nombre del equipo a WIN10-CLIENT y he indicado el dominio ``server.local``
+<p>
+  <img src="/img/nombre-de-equipo-cliente.png" alt="Cambio de nombre de equipo" width="40%">
+</p>
 
 Al unir el dominio, hay que poner la contraseña del administrador del dominio:
-![Contraseña del administrador](/img/contraseña-admin.png)
+<p>
+  <img src="/img/contraseña-admin.png" alt="Contraseña del administrador" width="40%">
+</p>
 
 Una vez unido, el equipo se reiniciará y ya podremos iniciar sesión con los usuarios creados anteriormente en el controlador de dominio, como por ejemplo **soporte.it**:
 <p>
