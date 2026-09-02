@@ -150,10 +150,10 @@ Por último, he vuelto a lanzar el comando ``impacket-GetUserSPNs server.local/m
 
 ![Comando](/img/impacket-aes.png)
 
-Ahora podemos comprobar que el ticket que ha devuelto empieza por $krb5tgs$**18**$
+Ahora podemos comprobar que el ticket que ha devuelto empieza por ``$krb5tgs$𝟭𝟴$``
 El número 18 indica que el ticket usa el cifrado AES 256.
 
-Antes de aplicar estos cambios, el ticket empezaba por $krb5tgs$**23**$
+Antes de aplicar estos cambios, el ticket empezaba por ``$krb5tgs$𝟮𝟯$``
 El número 23 significa que estaba usando el cifrado RC4.
 
 De esta manera, la cuenta sql.finanzas sigue siendo vulnerable a un ataque de Kerberoasting, pero ahora el descifrado offline requerirá mucha más potencia de
