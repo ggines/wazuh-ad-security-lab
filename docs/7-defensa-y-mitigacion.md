@@ -92,7 +92,7 @@ Si ahora vuelvo a ejecutar el ataque de Password Spraying para adivinar contrase
 
 Si intento acceder con el usuario afectado (maria.rrhh en este caso) desde el Windows 10 cliente, no podré acceder hasta que pasen los 5 minutos del bloqueo:
 <p>
-  <img src="/img/cuenta-bloqueada.png" alt="Cuenta bloqueada" width="50%">
+  <img src="/img/cuenta-bloqueada.png" alt="Cuenta bloqueada" width="45%">
 </p>
 
 Desde PowerShell, pueden verse las cuentas bloqueadas con el comando ``Search-ADAccount -LockedOut``
@@ -100,3 +100,66 @@ Desde PowerShell, pueden verse las cuentas bloqueadas con el comando ``Search-AD
 ![Comando](/img/powershell-locked-out.png)
 
 > Para esta medida de defensa, es importante indicar un umbral de bloqueo equilibrado, como de 5 a 10 intentos. Si el umbral es demasiado bajo, el atacante podría provocar una denegación de servicio al bloquear deliberadamente cuentas de usuario.
+
+### Forzar el cifrado AES en las cuentas de usuario
+
+Por defecto, Active Directory puede emitir tickets Kerberos utilizando un cifrado antiguo llamado RC4-HMAC.
+El algoritmo de este cifrado es matemáticamente débil y muy rápido de procesar, por lo que si un atacante intercepta un ticket cifrado en RC4, las herramientas de crackeo pueden probar millones de contraseñas por segundo y descubrir claves débiles en cuestión de minutos.
+
+Por este motivo, es importante asegurarnos que las cuentas de usuario utilicen tipos de cifrado más modernos como AES de 128 o 256 bits para Kerberos y así 
+obligar a que se emitan los tickets de servicio (TGS) con un algoritmo más robusto.
+
+Para habilitar los cifrados AES y desactivar el cifrado RC4 en la cuenta de servicio, he seguido estos pasos:
+
+En la ventana de Usuarios y equipos de Active Directory he ido a ``Ver > Características avanzadas`` para mostrar las características avanzadas.
+
+En las propiedades de la cuenta ``sql.finanzas`` he ido a la pestaña Editor de atributos y he seleccionado el atributo ``msDS-SupportedEncryptionTypes`` para editarlo. 
+Este atributo sirve para indicar los tipos de cifrado que soporta la cuenta:
+<p>
+  <img src="/img/SupportedEncryptionTypes.png" alt="Atributo msDS-SupportedEncryptionTypes" width="50%">
+</p>
+
+He introducido el valor decimal 24. Este valor activa exclusivamente los cifrados AES128 y AES256, eliminando el cifrado RC4 que es inseguro. 
+El funcionamiento de estos valores en el atributo msDS-SupportedEncryptionTypes es el siguiente:
+| **Valor decimal** | **Valor hexadecimal** | **Tipos de cifrado habilitados** |
+|:-----------------:|:---------------------:|:--------------------------------:|
+|         24        |          0x18         |          AES128 + AES256         |
+|         28        |          0x1C         |       RC4 + AES128 + AES256      |
+|         4         |          0x4          |          Únicamente RC4          |
+
+> En este caso, el valor 24 activa los cifrados AES128 y AES256 porque el cifrado AES
+128 vale 8 bits (0x8) y el cifrado AES 256 vale 16 bits (0x10), por lo que la suma es 24.
+
+Después de aplicar los cambios en la cuenta, he definido a nivel dominio los tipos de cifrados permitidos en Kerberos para no estar desactivando el cifrado RC4 cuenta por cuenta.
+
+En la GPO predeterminada, he ido a ``Configuración del equipo > Directivas > Configuración de Windows > Configuración de seguridad > Directivas locales >
+Opciones de seguridad > Seguridad de red: configurar tipos de cifrado permitidos para Kerberos``
+
+<p>
+  <img src="/img/directiva-cifrado-kerberos.png" alt="Directiva de tipos de cifrado permitidos para Kerberos" width="70%">
+</p>
+
+> En esta directiva he marcado únicamente las casillas AES128_HMAC_SHA1 y AES256_HMAC_SHA1 para obligar a todo el dominio a comunicarse utilizando
+únicamente Kerberos AES.
+
+Para aplicar los cambios de la GPO, he ejecutado el comando ``gpupdate /force``
+
+![Comando](/img/gpupdate-directiva-usuario.png)
+
+Por último, he vuelto a lanzar el comando ``impacket-GetUserSPNs server.local/maria.rrhh:Password1234 -dc-ip 10.0.1.10 -request`` para solicitar un ticket de servicio:
+
+![Comando](/img/impacket-aes.png)
+
+Ahora podemos comprobar que el ticket que ha devuelto empieza por $krb5tgs$**18**$
+El número 18 indica que el ticket usa el cifrado AES 256.
+
+Antes de aplicar estos cambios, el ticket empezaba por $krb5tgs$**23**$
+El número 23 significa que estaba usando el cifrado RC4.
+
+De esta manera, la cuenta sql.finanzas sigue siendo vulnerable a un ataque de Kerberoasting, pero ahora el descifrado offline requerirá mucha más potencia de
+cómputo.
+
+Aún así, es muy importante que la contraseña siga siendo lo suficientemente robusta, ya que aunque se use un cifrado más moderno, **si la contraseña es débil seguirá
+siendo fácil de descifrar.**
+
+Además, **la cuenta siempre debe tener habilitada la autenticación Kerberos previa.**
