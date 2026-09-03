@@ -163,3 +163,69 @@ Aún así, es muy importante que la contraseña siga siendo lo suficientemente r
 siendo fácil de descifrar.**
 
 Además, **la cuenta siempre debe tener habilitada la autenticación Kerberos previa.**
+
+
+### Desactivar LLMNR y NetBIOS frente ataques Man-in-the-Middle
+
+El objetivo de esta defensa es protegerse frente ataques MitM. Herramientas como *Responder* se usan para interceptar protocolos heredados de resolución de nombres (LLMNR, NBT-NS y mDNS) o abusar de firmas SMB no requeridas.
+
+Para desactivar LLMNR (Link Local Multicast Name Resolution / Resolución de nombres de multidifusión local de enlace), he creado la GPO ‘Protocolos’ y he
+configurado las siguientes directivas:
+
+Desde ``Configuración del equipo > Directivas > Plantillas administrativas > Red > Cliente DNS`` he habilitado la directiva **"Desactivar resolución de nombres de
+multidifusión"**
+
+<p>
+  <img src="/img/desactivar-resolucion-de-nombres-multidifusion.png" alt="Directiva" width="80%"
+</p>
+<p>
+  <img src="/img/desactivar-resolucion-de-nombres-multidifusion-2.png" alt="Directiva" width="80%"
+</p>
+
+Para desactivar NetBIOS, desde la misma GPO, he ido a ``Configuración del equipo > Directivas > Configuración de Windows > Scripts (inicio o apagado)``
+He creado un script de PowerShell que incluye el siguiente comando:
+```
+$RegPath =
+"HKLM:SYSTEM\CurrentControlSet\services\NetBT\Parameters\Interfaces"
+Get-ChildItem $RegPath | ForEach-Object {
+Set-ItemProperty -Path "$RegPath\$($_.PSChildName)" -Name
+"NetbiosOptions" -Value 2
+}
+```
+> Este script **desactiva NetBIOS sobre TCP/IP** en todas las interfaces de red que encuentre el registro. El valor **2** de NetbiosOptions desactiva NetBIOS.
+
+Una vez guardado el script, he seleccionado **Inicio** y he ido a la pestaña de Scripts de PowerShell para agregar el script:
+<p>
+  <img src="/img/script-inicio.png" alt="Script de inicio" width="70%">
+</p>
+
+Después de añadir el script creado anteriormente, he seleccionado la opción **'Ejecutar los scripts de PowerShell al principio'** y he aplicado los cambios:
+<p>
+  <img src="/img/ejecutar-scripts-al-principio.png" alt="Ejecutar los scripts de PowerShell al principio" width="40%">
+</p>
+
+Para evitar que el sistema bloqueé la ejecución de scripts al inicio, podemos permitir su ejecución mediante una directiva. 
+
+En la misma GPO, he ido a ``Configuración del equipo > Directivas > Plantillas administrativas > Componentes de Windows > Windows PowerShell``
+
+He habilitado la directiva **'Activar la ejecución de scripts'** y he seleccionado **'Permitir todos los scripts'**:
+<p>
+  <img src="/img/activar-ejecucion-de-scripts.png" alt="Activar la ejecución de scripts" width="80%">
+</p>
+
+Por último, he aplicado todos los cambios anteriores ejecutando ``gpupdate /force``
+
+![Comando](/img/gpupdate-force.png)
+
+Para comprobar la defensa, he vuelto a lanzar el ataque con Responder hacia el Windows 10 cliente para capturar el hash NTLM del usuario:
+
+![Comando](/img/responder-defensa.png)
+
+En el momento de intentar acceder a una ruta de red que no existe, en la pantalla del Kali, **ya no aparecen los protocolos LLMNR ni NetBIOS**, pero se sigue pudiendo
+capturar el hash mediante el protocolo **mDNS**:
+<p>
+  <img src="/img/responder-defensa-2.png" alt="Listening for events" width="70%">
+</p>
+
+> El protocolo mDNS permite resolver nombres sin necesidad de un servidor DNS convencional, pero no tiene el mismo nivel de riesgo que NetBIOS o LLMNR, por lo que
+habría que desactivarlo únicamente si no existe dependencia con otras aplicaciones o dispositivos del entorno.
