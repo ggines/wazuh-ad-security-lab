@@ -20,8 +20,9 @@ Desde el **Administrador del servidor > Servidor local > Propiedades > Nombre de
 ![Cambio del nombre del equipo](/img/nombre-de-equipo.png)
 
 Después de aplicar el nombre **‘SRV-LAB’**, he reiniciado el servidor para reflejar los cambios:
-
-![Cambio del nombre del equipo](/img/propiedades-srv-lab.png)
+<p>
+  <img src="/img/propiedades-srv-lab.png" alt="Cambio del nombre del equipo" width="70%">
+</p>
 
 Después de estos ajustes en el servidor, he iniciado el proceso de instalación del AD.  
 Desde el panel del administrador del servidor, he seleccionado **Agregar roles y características**.
