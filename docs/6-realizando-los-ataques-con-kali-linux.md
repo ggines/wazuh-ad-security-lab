@@ -1,7 +1,9 @@
 # Realizando los ataques con Kali Linux
+
 Una vez está el entorno listo, el siguiente paso es iniciar los ataques hacia el Windows Server y el Windows 10 cliente e identificarlos en el Wazuh Dashboard.
 
 ### Reconocimiento
+
 Escaneo de puertos e identificación de servicios con nmap (``nmap -sV -O IP``) hacia Windows Server
   
 ![nmap](/img/reconocimiento.png)
@@ -18,6 +20,7 @@ detectado servicios como Kerberos, RPC, el dominio de AD server.local, etc…
   ![Detalles del evento](/img/detalles-reconocimiento.png)
 
 ### Ataque de inundación ICMP (Ping Flood / DoS)
+
 Consiste en saturar el servidor enviando miles de paquetes con un tamaño inusualmente grande (``sudo ping -f -s 1400 IP``)
   
 ![Comando](/img/ping-flood.png)
@@ -26,6 +29,7 @@ Consiste en saturar el servidor enviando miles de paquetes con un tamaño inusua
   ![Eventos](/img/eventos-ping-flood.png)
 
 ### Ataque de Password Spraying
+
 Consiste en intentar acceder o validar la contraseña correcta de una cuenta de usuario probando contraseñas. En este caso, he hecho un intento de acceso 
 remoto hacia el usuario **soporte.it** del servidor. He probado una vez indicando una contraseña incorrecta y luego indicando la correcta, 
 con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario``
@@ -47,6 +51,7 @@ con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario``
   </p>
 
 ### Enumeración de usuarios mediante Kerberos:
+
 Consiste en identificar los usuarios existentes en el AD probando una lista.
 En este caso he usado la herramienta [Kerbrute](https://github.com/ropnop/kerbrute) (``kerbrute userenum --dc IP -d dominio users.txt``)
   
@@ -55,6 +60,7 @@ En este caso he usado la herramienta [Kerbrute](https://github.com/ropnop/kerbru
 El archivo ``users.txt`` contiene una lista de usuarios erróneos y válidos, y de esa lista ha detectado como válidos los usuarios **david.rrhh** y **maria.rrhh**
 
 ### Ataque de Kerberoasting
+
 Consiste en hacer que un usuario válido del dominio solicite un ticket Kerberos para una cuenta de servicio (como una cuenta que 
 ejecuta SQL Server o IIS) con el fin de extraer el hash de la contraseña de esa cuenta de servicio y descifrarlo. 
 En este caso, he utilizado Impacket con el script ``-GetUserSPNs`` para escanear todo el AD en busca de las cuentas con SPN y pedirles un ticket Kerberos. 
@@ -83,6 +89,7 @@ Para simular este ataque de fuerza bruta, he guardado el ticket en un archivo .t
     </p>
 
 ### Ataque de AS-REP Roasting
+
 Este ataque va dirigido a cuentas con preautenticación de Kerberos deshabilitada. Para realizarlo, he creado un usuario llamado 
 **'cuenta.rrhh'** con una contraseña débil y con las opciones **'La contraseña nunca expira'** y **'No pedir la autenticación Kerberos previa'** marcadas:
 <p>
@@ -114,6 +121,7 @@ Una vez más, el atacante podría intentar descifrar el hash anterior para obten
 > Entre los detalles se encuentra el usuario objetivo, la IP de origen, el ID del evento (4768) y el mensaje de que se solicitó un vale de autenticación Kerberos TGT.
     
 ### Simulación de ejecución de malware
+
 He creado un archivo de texto en el Escritorio del cliente con una cadena de carácteres que simula un virus. 
 Al guardar el archivo, inmediatamente Windows Defender lo detecta como una amenaza y lo elimina.
 <p>
@@ -129,6 +137,7 @@ Al guardar el archivo, inmediatamente Windows Defender lo detecta como una amena
   </p>
 
 ### Ejecución de comandos sospechosos:
+
 He ejecutado un comando en el cliente con la herramienta **procdump** para simular un ataque de robo de credenciales en memoria. 
 Este ataque consiste en leer la memoria del proceso lsass.exe para extraer contraseñas o hashes de usuarios. Este comando se utiliza para realizar 
 un volcado completo del proceso lsass.exe y guardarlo en el archivo lsass.dmp
@@ -145,6 +154,7 @@ un volcado completo del proceso lsass.exe y guardarlo en el archivo lsass.dmp
   </p>
 
 ### Ataque Man-In-The-Middle para la captura de credenciales de usuarios
+
 Este ataque consiste en montar servidores falsos (HTTP, HTTPS, DNS, SMB, etc…) en el Kali para quedarse en escucha y esperar a que alguna víctima cometa un error de resolución de nombres. En este caso, desde el cliente he intentado acceder a una ruta de red que no existe ("servidorfalso") para que envíe un Broadcast a toda la red local preguntando por ese nombre. En este punto, el Kali se hace pasar por ese servidor y responde al cliente solicitando que se autentique para así obtener las credenciales del usuario en hash NTLMv2.
 
 Para esto, he usado el comando ``sudo responder -I eth0 -dwv``
@@ -160,7 +170,8 @@ Y se queda en escucha:
   
 ![responder en escucha](/img/responder-listening.png)
 
-En este punto, he intentado acceder a una ruta de red que no existe ("servidorfalso") desde el explorador de archivos o desde la ventana de ejecución (Windows + R):  
+En este punto, he intentado acceder a una ruta de red que no existe ("servidorfalso") desde el explorador de archivos o desde la ventana de ejecución (Windows + R):
+
 ![Ruta de red inexistente en la ventana de ejecución](/img/servidorfalso.png)
 
 Al intentar acceder, el Kali responde al broadcast pidiendo que el usuario se autentique para acceder a ese servidor falso:
@@ -175,6 +186,5 @@ Al enviar las credenciales de red en el cliente, el Kali recibe el hash NTLMv2 d
 <p>
   <img src="/img/ntlm-hash.png" alt="Hash NTLMv2-SSP" width="80%"> 
 </p>
-
 
 ![Siguiente: Defensa y mitigación](7-defensa-y-mitigacion.md)
