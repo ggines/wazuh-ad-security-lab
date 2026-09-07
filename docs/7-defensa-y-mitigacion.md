@@ -229,3 +229,35 @@ capturar el hash mediante el protocolo **mDNS**:
 
 > El protocolo mDNS permite resolver nombres sin necesidad de un servidor DNS convencional, pero no tiene el mismo nivel de riesgo que NetBIOS o LLMNR, por lo que
 habría que desactivarlo únicamente si no existe dependencia con otras aplicaciones o dispositivos del entorno.
+
+### Forzar la firma SMB (SMB Signing)
+
+Aún desactivando los protocolos NetBIOS y LLMNR, el atacante podría interceptar el tráfico de archivos (SMB) si no requiere una firma digital, ya que por defecto, las máquinas cliente de Windows no exigen que el tráfico de archivos esté firmado digitalmente.
+
+Para corregirlo, en la misma GPO anterior, he ido a ``Configuración del equipo > Directivas > Configuración de Windows > Configuración de seguridad >
+Directivas locales > Opciones de seguridad`` y he habilitado la directiva **"Servidor de red de Microsoft: firmar digitalmente las comunicaciones (siempre)"**
+<p>
+  <img src="/img/directiva-firmar-digitalmente-las-comunicaciones-servidor.png" alt="Directiva" width="70%">
+</p>
+
+En la misma ruta, también he habilitado la directiva **"Cliente de redes de Microsoft: firmar digitalmente las comunicaciones (siempre)"**
+<p>
+  <img src="/img/directiva-firmar-digitalmente-las-comunicaciones-cliente.png" alt="Directiva" width="70%">
+</p>
+
+> De esta manera, se exigirá que el tráfico de archivos esté firmado digitalmente.
+
+Por último, he aplicado los cambios anteriores ejecutando ``gpupdate /force``
+
+![Comando](/img/gpupdate-force.png)
+
+Para comprobar que la firma SMB esté realmente activada y que el atacante no pueda realizar un ataque de Relay, he ejecutado el comando ``netexec smb 10.0.1.10
+10.0.1.20 --gen-relay-list objetivos.txt`` en Kali:
+<p>
+  <img src="/img/netexec-gen-relay-list.png" alt="Comando" width="75%">
+</p>
+
+> Este comando comprueba el protocolo SMB en los hosts Windows Server y Windows 10 y genera una lista de posibles destinos vulnerables a SMB relay. 
+En este caso, los 2 hosts aparecen con la firma SMB habilitada (signing:True), y además no generó el archivo, por lo que estos hosts no los consideró vulnerables al ataque.
+
+![Siguiente: Conclusiones](8-conclusiones.md)
