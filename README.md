@@ -23,3 +23,7 @@ y aplicar medidas efectivas de defensa y mitigación.
 - ![Defensa y mitigación](/docs/7-defensa-y-mitigacion.md)
 - ![Conclusiones](/docs/8-conclusiones.md)
 - ![Webgrafía](/docs/9-webgrafia.md)
+
+### Documentación en PDF 📄
+
+La documentación también se puede descargar en ![formato PDF](/docs/Bastionado-Active-Directory-Monitorizacion-Wazuh-GuillermoGines.pdf)
