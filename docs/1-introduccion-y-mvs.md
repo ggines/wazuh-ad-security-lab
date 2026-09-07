@@ -1,4 +1,5 @@
 # Introducción y MVs
+
 Este proyecto consiste en monitorear las alertas de seguridad de un Windows Server con Active Directory instalado utilizando el SIEM Wazuh tras lanzar ataques simulados
 desde Kali Linux, para posteriormente aplicar medidas de protección en el controlador de dominio. Todo ello desde un entorno virtualizado con VirtualBox.
 
@@ -40,6 +41,7 @@ El entorno está compuesto por las siguientes MVs:
   - **Red:** Adaptador en Red NAT con la IP fija 10.0.1.21
 
  ## Mapa de red
+ 
 <p align="center">
   <img src="/img/red-ad.png" alt="Mapa de red" width="65%">
 </p>
