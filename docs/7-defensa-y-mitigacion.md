@@ -19,7 +19,7 @@ Para configurarlo, he seguidos estos pasos:
         <ca_store>wpk_root.pem</ca_store>
         <ca_verification>yes</ca_verification>
   </active-response>
-
+  ```
 - He abierto el archivo de configuración de Wazuh Manager (``/var/ossec/etc/ossec.conf``) en el Ubuntu Server y he revisado que exista este bloque para indicar
   que herramienta usar en la respuesta activa. En este caso, es la herramienta **netsh.exe** , la cuál viene preinstalada y se encarga de añadir
   reglas de bloqueo automáticas en el Firewall de Windows:
@@ -29,7 +29,7 @@ Para configurarlo, he seguidos estos pasos:
     <executable>netsh.exe</executable>
     <timeout_allowed>yes</timeout_allowed>
   </command>
-
+  ````
 - En el mismo archivo de configuración anterior de Wazuh Manager (``/var/ossec/etc/ossec.conf``) he definido la siguiente Respuesta Activa:
   ```
   <active-response>
@@ -56,6 +56,7 @@ Para comprobar que la respuesta activa funciona, he vuelto a lanzar los ataques 
 
 He lanzado el ataque de Password Spraying (Regla con ID 92652) con netexec hacia el Windows Server para probar credenciales válidas en un usuario. Como este
 comando ha producido varios intentos de inicio de sesión erróneos, la alerta se generó y se activó la respuesta activa:
+
 ![Ataque de Password Spraying](/img/password-spraying-defensa.png)
 
 En este momento Kali Linux no tiene conectividad con el Windows Server, ya que Wazuh dió la orden para ejecutar el comando **netsh** y bloquear la IP atacante:
