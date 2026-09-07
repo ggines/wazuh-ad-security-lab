@@ -26,4 +26,4 @@ y aplicar medidas efectivas de defensa y mitigación.
 
 ### Documentación en PDF 📄
 
-La documentación también se puede descargar en ![formato PDF](/docs/Bastionado-Active-Directory-Monitorizacion-Wazuh-GuillermoGines.pdf)
+La documentación también se puede descargar en ![formato PDF](/docs/Bastionado-Active-Directory-Monitorizacion-Wazuh-GuillermoGines.pdf).
