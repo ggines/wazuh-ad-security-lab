@@ -1,4 +1,5 @@
 # Instalación de Active Directory en Windows Server
+
 Antes de realizar la instalación del AD, he configurado la red del Windows Server de esta manera:
 - **IP estática:** 10.0.1.10
 - **Máscara de subred:** 255.255.255.0
