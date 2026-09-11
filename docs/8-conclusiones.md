@@ -12,4 +12,8 @@ mediante el Firewall de Windows Defender tras detectar determinados ataques. Con
 como la desactivación de protocolos de red heredados (LLMNR, NetBIOS), la exigencia de la firma SMB obligatoria y la imposición del uso de algoritmos criptográficos 
 robustos basados en AES-256 para el protocolo Kerberos.
 
+**Como conclusión final**, este proyecto ha permitido comprender el funcionamiento estructural de un entorno basado en Active Directory, 
+identificar los vectores de ataque y vulnerabilidades críticas presentes en sistemas por defecto, y validar las medidas de bastionado y mitigación automatizada 
+que deben aplicarse para proteger tanto el controlador de dominio como los equipos clientes de la organización.
+
 ![Siguiente: Webgrafía](9-webgrafia.md)
