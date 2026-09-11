@@ -32,7 +32,7 @@ Consiste en saturar el servidor enviando miles de paquetes con un tamaño inusua
 
 Consiste en intentar acceder o validar la contraseña correcta de una cuenta de usuario probando contraseñas. En este caso, he hecho un intento de acceso 
 remoto hacia el usuario **soporte.it** del servidor. He probado una vez indicando una contraseña incorrecta y luego indicando la correcta, 
-con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario``
+con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario'``
   
 ![Comando](/img/password-spraying.png)
 
