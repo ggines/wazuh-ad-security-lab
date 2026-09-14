@@ -43,7 +43,7 @@ Para configurarlo, he seguidos estos pasos:
   
   - **command:** El comando que se ejecutará en la Respuesta Activa. En este caso es el comando netsh, y se especifica con el mismo nombre indicado en el bloque anterior.
   - **location:** Indica que el bloqueo debe ejecutarse en la misma máquina que generó la alerta.
-  - rules_id: Indica que cuando se produzcan alertas con esos IDs de reglas (en este caso alertas de Suricata, conexiones remotas o inicios de sesión
+  - **rules_id:** Indica que cuando se produzcan alertas con esos IDs de reglas (en este caso alertas de Suricata, conexiones remotas o inicios de sesión
     fallidos), se bloquee la IP del atacante (*srcip*).
   - **timeout:** Indica la duración del bloqueo. En este caso 600 segundos (10 minutos).
  
