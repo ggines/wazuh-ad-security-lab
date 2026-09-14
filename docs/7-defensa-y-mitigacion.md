@@ -165,6 +165,12 @@ siendo fácil de descifrar.**
 
 Además, **la cuenta siempre debe tener habilitada la autenticación Kerberos previa.**
 
+> Como ahora los tickets se emiten con el cifrado AES, al lanzar este ataque el SIEM lo detecta como un posible ataque de Pass-the-hash.
+> Anteriormente, saltaba la alerta de Suricata **'Kerberos 5 weak encryption parameters'**, pero como ahora Suricata detecta que los parámetros criptográficos de Kerberos son seguros, la regla de cifrado débil desaparece.
+> El motivo por el cual ahora aparece la alerta **'Successful Remote Logon Detected - User:\maria.rrhh - NTLM authentication, possible pass-the-hash attack.'** es porque el sistema falla al autenticar al usuario con Kerberos y se ve obligado a degradar la comunicación a NTLM:
+> 
+> ![Alerta pass-the-hash](/img/alerta-pass-the-hash.png)
+
 
 ### Desactivar LLMNR y NetBIOS frente ataques Man-in-the-Middle
 
