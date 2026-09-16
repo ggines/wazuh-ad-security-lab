@@ -121,7 +121,7 @@ Este atributo sirve para indicar los tipos de cifrado que soporta la cuenta:
 </p>
 
 He introducido el valor decimal 24. Este valor activa exclusivamente los cifrados AES128 y AES256, eliminando el cifrado RC4 que es inseguro. 
-El funcionamiento de estos valores en el atributo msDS-SupportedEncryptionTypes es el siguiente:
+El funcionamiento de estos valores en el atributo ``msDS-SupportedEncryptionTypes`` es el siguiente:
 | **Valor decimal** | **Valor hexadecimal** | **Tipos de cifrado habilitados** |
 |:-----------------:|:---------------------:|:--------------------------------:|
 |         24        |          0x18         |          AES128 + AES256         |
