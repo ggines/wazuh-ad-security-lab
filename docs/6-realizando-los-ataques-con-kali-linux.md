@@ -13,10 +13,12 @@ detectado servicios como Kerberos, RPC, el dominio de AD server.local, etc…
 
 - **Eventos en Wazuh**: Suricata detectó el escaneo de Nmap y la detección del SO (Firmas ET SCAN Nmap Scripting Engine User-Agent Detected (Nmap Scripting Engine) y
   ET SCAN NMAP OS Detection Probe)
+  
   ![Eventos](/img/eventos-reconocimiento.png)
   ![Eventos](/img/eventos-reconocimiento-2.png)
 
-  Entre los detalles de las alertas, aparece la IP del Kali:  
+  Entre los detalles de las alertas, aparece la IP del Kali:
+  
   ![Detalles del evento](/img/detalles-reconocimiento.png)
 
 ### Ataque de inundación ICMP (Ping Flood / DoS)
@@ -25,7 +27,8 @@ Consiste en saturar el servidor enviando miles de paquetes con un tamaño inusua
   
 ![Comando](/img/ping-flood.png)
 
-- **Eventos en Wazuh:** Suricata detectó los pings ICMP (Firma GPL ICMP PING *NIX)  
+- **Eventos en Wazuh:** Suricata detectó los pings ICMP (Firma GPL ICMP PING *NIX)
+  
   ![Eventos](/img/eventos-ping-flood.png)
 
 ### Ataque de Password Spraying
@@ -50,7 +53,7 @@ con el comando ``netexec smb IP -u "usuario" -p 'contraseña/diccionario'``
     <img src="/img/detalles-password-spraying-2.png" alt="Detalles" width="60%"> 
   </p>
 
-### Enumeración de usuarios mediante Kerberos:
+### Enumeración de usuarios mediante Kerberos
 
 Consiste en identificar los usuarios existentes en el AD probando una lista.
 En este caso he usado la herramienta [Kerbrute](https://github.com/ropnop/kerbrute) (``kerbrute userenum --dc IP -d dominio users.txt``)
@@ -80,6 +83,7 @@ Para simular este ataque de fuerza bruta, he guardado el ticket en un archivo .t
 > Como es una contraseña fácil, lo ha descifrado en segundos. En este caso la contraseña de la cuenta de servicio **sql.finanzas** es **Pass1234**
 
   - **Eventos en Wazuh:** Suricata ha detectado el ataque desde el tráfico de red.
+    
     ![Eventos](/img/eventos-kerberoasting.png)
 
   - **Detalles del evento:** En los detalles aparece la cuenta usada para obtener el ticket (maria.rrhh),
@@ -129,6 +133,7 @@ Al guardar el archivo, inmediatamente Windows Defender lo detecta como una amena
 </p>
 
 - **Evento en Wazuh:** El canal de Windows Defender ha detectado el posible malware.
+  
   ![Evento](/img/evento-malware.png)
 
 - **Detalles del evento:** Aparece la cuenta en que sucedió y la ruta y el proceso de la amenaza:
@@ -136,7 +141,7 @@ Al guardar el archivo, inmediatamente Windows Defender lo detecta como una amena
     <img src="/img/detalles-malware.png" alt="Detalles" width="60%"> 
   </p>
 
-### Ejecución de comandos sospechosos:
+### Ejecución de comandos sospechosos
 
 He ejecutado un comando en el cliente con la herramienta **procdump** para simular un ataque de robo de credenciales en memoria. 
 Este ataque consiste en leer la memoria del proceso lsass.exe para extraer contraseñas o hashes de usuarios. Este comando se utiliza para realizar 
@@ -146,6 +151,7 @@ un volcado completo del proceso lsass.exe y guardarlo en el archivo lsass.dmp
   </p>
 
 - **Evento en Wazuh:** Al tratarse de un comando que interactúa con el proceso lsass.exe, Windows Defender lo detecta.
+  
   ![Evento](/img/evento-procdump.png)
 
 - **Detalles del evento:**
